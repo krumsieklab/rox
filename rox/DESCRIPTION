@@ -1,0 +1,24 @@
+Package: rox
+Title: rox: Rank Order with (X)missing values
+Version: 0.0.0.9000
+Authors@R: 
+    person(given = "mustafa",
+           family = "buyukozkan",
+           role = c("aut", "cre"),
+           email = "mub4004@med.cornell.edu",
+           comment = c(ORCID = "0000-0001-5027-5078"))
+Description: estimates rank order statistics with missing values that are due to LOD/left-truncation. 
+             Multivariable extension is given as well.
+License: `use_mit_license()`, `use_gpl3_license()` or friends to pick a
+    license
+Encoding: UTF-8
+LazyData: true
+Depends:
+    survival
+NeedsCompilation: yes
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.1.1
+Suggests: 
+    rmarkdown,
+    knitr
+VignetteBuilder: knitr

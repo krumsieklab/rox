@@ -1,0 +1,112 @@
+---
+title: "Introduction"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Introduction}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+This vignette outlines how `rox` works.
+
+```{r setup, fig.width=7, fig.height=4.5}
+set.seed(42)
+library(survival)
+library(rox)
+
+# population size 
+N = 1e4
+
+# let y be an outcome of interest 
+y = rnorm(N)
+
+# let x be a metabolite measurement
+x = y + rnorm(N)
+
+# ground truth: concordance between x and y 
+d0 = survival::concordance(x~y)
+d0$concordance
+
+# limit-of-detection for missing values 
+th = 0 
+
+# n: size of a sample from the population
+n = 400 
+
+# a sample from the population
+i = sample(N, n)
+xi = x[i]
+yi = y[i]
+
+# values below th are missing 
+xh = xi 
+xh[xh<th] = NA
+
+# how the data looks like 
+data.table::data.table(xh = xh, yi)
+
+# rox: estimates the concordance with missing values
+rox(xh, yi)
+
+# sample estimate if there were no missing values
+(d1 = concordance(xi~yi))
+
+
+rbind(
+  `concordance with no missing values:` = unname(d1$concordance), 
+  `rox estimate with missing values:` = unname(rox(xh, yi)$stats["d"])
+)
+
+
+## - - - - - Multivariable example  - - - - - 
+# population size 
+N = 1e4
+n = 500
+
+# let y be an outcome of interest 
+y = rnorm(N)
+
+# let z be a covariate of interest 
+z = rnorm(N)
+
+# let x be a metabolite measurement
+x = y + 2*z + rnorm(N)
+
+# fit for population = ground truth 
+fit0 = rox_mv(x, data.frame(y,z))
+fit0 
+
+# a sample from the population
+i = sample(N, n)
+xi = x[i]
+yi = y[i]
+zi = z[i]
+
+# values below th are missing 
+xh = xi 
+xh[xh<th] = NA
+
+# how the data looks like 
+data.table::data.table(xh = xh, yi, zi)
+
+# rox: estimates the concordance with missing values
+rox_mv(xh, data.frame(y=yi, z=zi))
+
+# concordance regression estimate with no missing values 
+(fit1 = rox_mv(xi, data.frame(y=yi, z=zi)))
+
+# betas 
+rbind(`concordance regression with no missing values:` = 
+        fit1$stats_model[,"B"], 
+      `rox coefficient estimates with missing values:` = 
+        rox_mv(xh, data.frame(y=yi, z=zi))$stats_model[,"B"])
+
+```
+
