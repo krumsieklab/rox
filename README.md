@@ -4,7 +4,7 @@
 
 ## Citation
 
-This repository contains the R code for Buyukozkan\*, et al., *rox: A statistical model to handle missing values without imputation*. <https://doi.org/xyz/qwa>
+This repository contains the R code for Buyukozkan\*, et al., *rox: A statistical model to handle missing values without imputation*. <https://doi.org/10.1101/2022.04.15.488427>
 
 ## R-package
 
